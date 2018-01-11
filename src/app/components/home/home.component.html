@@ -1,5 +1,52 @@
-<div class="container">
-  <h1 class="title">
-    {{ 'PAGES.HOME.TITLE' | translate }}
-  </h1>
+<div class="container-fluid">
+  <accordion class='row'>
+    <accordion-group heading="Settings" isOpen='true'>
+      <form>
+        <div class='form-group row'>
+          <label class='col-2 col-form-label'>Slack WebHook URL:</label>
+          <input [(ngModel)]="webhookUrl" [ngModelOptions]="{standalone: true}" (ngModelChange)="saveWebhookUrl()" type="text" class="form-control col-10"
+            placeholder="e.g. https://hooks.slack.com/services/aaa/bbb/ccc">
+        </div>
+        <div class='form-group row'>
+          <label class='col-2 col-form-label'>Sender:</label>
+          <input [(ngModel)]="sender" [ngModelOptions]="{standalone: true}" type="text" (ngModelChange)="saveSender()" class="form-control col-10"
+            placeholder="For example a bot name">
+        </div>
+      </form>
+    </accordion-group>
+    <accordion-group heading="Message" isOpen='true'>
+      <form>
+        <div class='form-group row'>
+          <label class='col-2 col-form-label'>Message:</label>
+          <textarea rows="4" [(ngModel)]="content" [ngModelOptions]="{standalone: true}" type="text" class="form-control col-10">
+          </textarea>
+          <small class='offset-2'>
+            <a href='#' (click)='onMessageFormatingClicked()'>How to format your message</a>
+          </small>
+        </div>
+      </form>
+    </accordion-group>
+    <accordion-group heading="Send" isOpen='true'>
+      <form>
+        <div class='form-group row'>
+          <label class='col-2 col-form-label'>Users</label>
+          <div class='col-10 row'>
+            <input [(ngModel)]="users" [ngModelOptions]="{standalone: true}" (ngModelChange)="saveUsers()" type="text" class="form-control col-9">
+            <button class='btn btn-primary ml-4 col-2' (click)="onSendToUsersClicked()">Send to users</button>
+          </div>
+          <small class='offset-2'>separate by comma</small>
+        </div>
+      </form>
+      <form>
+        <div class='form-group row'>
+          <label class='col-2 col-form-label'>Channels</label>
+          <div class='col-10 row'>
+            <input [(ngModel)]="channels" [ngModelOptions]="{standalone: true}" (ngModelChange)="saveChannels()" type="text" class="form-control col-9">
+            <button class='btn btn-primary ml-4 col-2' (click)="onSendToChannelsClicked()">Send to channels</button>
+          </div>
+          <small class='offset-2'>separate by comma</small>
+        </div>
+      </form>
+    </accordion-group>
+  </accordion>
 </div>

@@ -1,0 +1,54 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "attach",
+      "name": "Attach",
+      "port": 9222,
+      "sourceMaps": true,
+      "smartStep": true,
+      "webRoot": "${workspaceFolder}/dist",
+      "sourceMapPathOverrides": {
+        "webpack:///./*": "${webRoot}/*"
+      }
+    },
+    {
+      "name": "Debug Main Process",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+      },
+      "args": [
+        "./dist"
+      ],
+      "trace": true,
+      "sourceMaps": true,
+      "smartStep": true,
+      "outFiles": [
+        "${workspaceRoot}/dist/**/*.js"
+      ]
+    },
+    {
+      "name": "Debug Renderer Process",
+      "type": "chrome",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+      },
+      "runtimeArgs": [
+        "${workspaceRoot}/dist",
+        "--remote-debugging-port=9222"
+      ],
+      "webRoot": "${workspaceRoot}/src",
+      "sourceMaps": true,
+      "smartStep": true,
+      "trace": true,
+    }
+  ],
+  "compounds": []
+}

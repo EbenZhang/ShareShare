@@ -18,6 +18,12 @@ import { ElectronService } from './providers/electron.service';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -26,20 +32,22 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule,
+    AppRoutingModule, BrowserAnimationsModule,
+    BsDropdownModule.forRoot(),
+    AccordionModule.forRoot(), CollapseModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: (HttpLoaderFactory),
         deps: [HttpClient]
       }
-    })
+    }),
   ],
   providers: [ElectronService],
   bootstrap: [AppComponent]
