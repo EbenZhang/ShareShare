@@ -18,13 +18,17 @@
       <form>
         <div class='form-group row'>
           <label class='col-2 col-form-label'>Message:</label>
-          <textarea rows="4" [(ngModel)]="content" [ngModelOptions]="{standalone: true}" type="text" class="form-control col-10">
+          <textarea rows="4" [(ngModel)]="content" [ngModelOptions]="{standalone: true}" type="text" (ngModelChange)="preview()" class="form-control col-10">
           </textarea>
           <small class='offset-2'>
             <a href='#' (click)='onMessageFormatingClicked()'>How to format your message</a>
           </small>
         </div>
       </form>
+      <div class='row'>
+        <div class='col-2'>Preview:</div>
+        <div #previewContainer class='col-10' [innerHTML]="previewHtml"></div>
+      </div>
     </accordion-group>
     <accordion-group heading="Send" isOpen='true'>
       <form>

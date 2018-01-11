@@ -1,8 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Router, Routes } from '@angular/router';
 import { Event, shell } from 'electron';
 const ElectronStore = require("electron-store");
 import * as Slack from "node-slack";
+import * as slackdown from "slackdown";
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +22,9 @@ export class HomeComponent implements OnInit {
   channelsKey = "channels";
   senderKey = "sender";
   content: string;
+  previewHtml: string;
+
+  @ViewChild("previewContainer") previewContainer: ElementRef;
   constructor( @Inject(Router) private router: Router) {
     this.webhookUrl = this.store.get(this.webhookUrlKey);
     this.users = this.store.get(this.usersKey);
@@ -116,5 +121,23 @@ export class HomeComponent implements OnInit {
 
   onMessageFormatingClicked() {
     shell.openExternal("https://zapier.com/help/tips-formatting-your-slack-messages/");
+  }
+
+  preview() {
+    this.previewHtml = slackdown.parse(this.content).replace(/\n/g, "<br>");
+  }
+
+  @HostListener('click', ['$event'])
+  onClick(event: MouseEvent): void {
+    if (!event.target) {
+      return;
+    }
+    const target = event.target as any;
+    if (target.tagName && target.tagName === "A") {
+      if (this.previewContainer.nativeElement.contains(target)) {
+        event.preventDefault();
+        shell.openExternal(target.href);
+      }
+    }
   }
 }
