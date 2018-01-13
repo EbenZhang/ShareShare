@@ -4,7 +4,12 @@ import { Event, shell } from 'electron';
 const ElectronStore = require("electron-store");
 import * as Slack from "node-slack";
 import * as slackdown from "slackdown";
-import { element } from 'protractor';
+import * as fs from 'fs';
+import * as path from 'path';
+import { Converter } from "showdown";
+import { ArticleSourceProvider } from '../../article.source.provider';
+import { remote } from "electron";
+const slackify = require('slackify-html');
 
 @Component({
   selector: 'app-home',
@@ -12,16 +17,26 @@ import { element } from 'protractor';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  store = new ElectronStore();
+  private store = new ElectronStore();
+  private webhookUrlKey = "webhookUrl";
+  private usersKey = "users";
+  private channelsKey = "channels";
+  private senderKey = "sender";
+  private _content: string;
+  articleSourceProvider: ArticleSourceProvider = new ArticleSourceProvider();
   webhookUrl: string;
   users: string;
   channels: string;
   sender: string;
-  webhookUrlKey = "webhookUrl";
-  usersKey = "users";
-  channelsKey = "channels";
-  senderKey = "sender";
-  content: string;
+
+  get content(): string {
+    return this._content;
+  }
+
+  set content(value: string) {
+    this._content = value;
+    this.preview();
+  }
   previewHtml: string;
 
   @ViewChild("previewContainer") previewContainer: ElementRef;
@@ -58,7 +73,7 @@ export class HomeComponent implements OnInit {
   }
 
   verifyMessage(): boolean {
-    if (this.content.length === 0) {
+    if (!this.content || this.content.length === 0) {
       return false;
     }
     return true;
@@ -113,6 +128,10 @@ export class HomeComponent implements OnInit {
       username: this.sender
     }, (err: any, body: any) => {
       if (err) {
+        if (err.toString().startsWith("Error: connect ETIMEDOUT")) {
+          alert("Unable to connect to Slack server, please check you network connection.");
+          return;
+        }
         console.error(err);
         alert(err.message);
       }
@@ -139,5 +158,68 @@ export class HomeComponent implements OnInit {
         shell.openExternal(target.href);
       }
     }
+  }
+
+  onPickRandomMessageClicked() {
+    let sources = this.articleSourceProvider.sources;
+    if (sources.length === 0) {
+      this.addNewSource();
+      sources = this.articleSourceProvider.sources;
+    }
+    if (sources.length === 0) {
+      return;
+    }
+    const folder = this.articleSourceProvider.curSource;
+    let file = this.getRandomFileFromFolderRecursively(folder);
+    while (file === null) {
+      file = this.getRandomFileFromFolderRecursively(folder);
+    }
+    let md: string;
+    let html: string;
+    try {
+      md = fs.readFileSync(file, "utf-8").toString();
+      const mdToHtml = new Converter();
+      html = mdToHtml.makeHtml(md);
+    } catch (err) {
+      console.error(err);
+      this.content = md;
+    }
+    try {
+      this.content = slackify(html);
+    } catch (err) {
+      console.error(err);
+      this.content = md;
+    }
+  }
+
+  getRandomFileFromFolderRecursively(folder: string) {
+    console.log(`Enumerating folder: ${folder}`);
+    const random = Math.floor(Math.random() * 10000000);
+    const files = fs.readdirSync(folder).filter(x => !path.basename(x).startsWith("."));
+    if (files.length === 0) {
+      return null;
+    }
+    const file = path.join(folder, files[random % files.length]);
+    if (file.toLowerCase().endsWith(".md") && fs.lstatSync(file).isFile) {
+      return file;
+    }
+    if (fs.lstatSync(file).isDirectory()) {
+      return this.getRandomFileFromFolderRecursively(file);
+    } else {
+      return this.getRandomFileFromFolderRecursively(this.articleSourceProvider.curSource);
+    }
+  }
+
+  addNewSource() {
+    const results = remote.dialog.showOpenDialog(remote.getCurrentWindow(), { properties: ['openDirectory'] });
+    if (results) {
+      const src = results[0];
+      this.articleSourceProvider.addSource(src);
+      this.articleSourceProvider.curSource = src;
+    }
+  }
+
+  onSourceSelected(src: string) {
+    this.articleSourceProvider.curSource = src;
   }
 }

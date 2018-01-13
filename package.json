@@ -1,19 +1,7 @@
 {
-  "name": "ng-gitextensions",
+  "name": "shareshare",
   "version": "2.4.1",
   "description": "Angular 5 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/angular-electron",
-  "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
-  },
-  "keywords": [
-    "angular",
-    "angular 5",
-    "electron",
-    "typescript",
-    "sass"
-  ],
   "main": "main.js",
   "private": true,
   "scripts": {
@@ -59,7 +47,9 @@
     "ngx-bootstrap": "^2.0.0-rc.0",
     "node-slack": "0.0.7",
     "rxjs": "5.5.2",
+    "showdown": "^1.8.6",
     "slackdown": "^0.1.1",
+    "slackify-html": "^1.0.1",
     "zone.js": "0.8.17"
   },
   "devDependencies": {
@@ -73,6 +63,8 @@
     "@types/jasminewd2": "2.0.2",
     "@types/node": "7.0.7",
     "@types/node-slack": "0.0.30",
+    "@types/showdown": "^1.7.2",
+    "@types/slackify-html": "^1.0.5",
     "autoprefixer": "7.1.4",
     "circular-dependency-plugin": "3.0.0",
     "copy-webpack-plugin": "4.1.1",

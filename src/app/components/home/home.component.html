@@ -17,8 +17,26 @@
     <accordion-group heading="Message" isOpen='true'>
       <form>
         <div class='form-group row'>
-          <label class='col-2 col-form-label'>Message:</label>
-          <textarea rows="4" [(ngModel)]="content" [ngModelOptions]="{standalone: true}" type="text" (ngModelChange)="preview()" class="form-control col-10">
+          <button class='btn btn-secondary offset-2' (click)='onPickRandomMessageClicked()'>Pick a random message from</button>
+          <div class="dropdown col-5" dropdown>
+            <button dropdownToggle class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              {{articleSourceProvider.curSource}}
+            </button>
+            <div *dropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <ng-container *ngFor="let src of articleSourceProvider.sources">
+                <a class="dropdown-item" href="#" (click)="onSourceSelected(src)">{{src}}</a>
+              </ng-container>
+            </div>
+          </div>
+          <button class="btn btn-secondary" (click)='addNewSource()'>
+            <i class='fa fa-plus mr-1'></i>Add Folder
+          </button>
+        </div>
+        <div class='form-group row'>
+          <label class='col-2 col-form-label'>Message:
+          </label>
+          <textarea rows="10" [(ngModel)]="content" [ngModelOptions]="{standalone: true}" type="text" class="form-control col-10">
           </textarea>
           <small class='offset-2'>
             <a href='#' (click)='onMessageFormatingClicked()'>How to format your message</a>
@@ -36,7 +54,7 @@
           <label class='col-2 col-form-label'>Users</label>
           <div class='col-10 row'>
             <input [(ngModel)]="users" [ngModelOptions]="{standalone: true}" (ngModelChange)="saveUsers()" type="text" class="form-control col-9">
-            <button class='btn btn-primary ml-4 col-2' (click)="onSendToUsersClicked()">Send to users</button>
+            <button class='btn btn-secondary ml-4 col-2' (click)="onSendToUsersClicked()">Send to users</button>
           </div>
           <small class='offset-2'>separate by comma</small>
         </div>
@@ -46,7 +64,7 @@
           <label class='col-2 col-form-label'>Channels</label>
           <div class='col-10 row'>
             <input [(ngModel)]="channels" [ngModelOptions]="{standalone: true}" (ngModelChange)="saveChannels()" type="text" class="form-control col-9">
-            <button class='btn btn-primary ml-4 col-2' (click)="onSendToChannelsClicked()">Send to channels</button>
+            <button class='btn btn-secondary ml-4 col-2' (click)="onSendToChannelsClicked()">Send to channels</button>
           </div>
           <small class='offset-2'>separate by comma</small>
         </div>
