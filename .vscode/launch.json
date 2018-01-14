@@ -2,6 +2,30 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "node",
+      "request": "launch",
+      "name": "Electron: Main",
+      "program": "${workspaceFolder}\\main.ts",
+      "outFiles": [
+        "${workspaceRoot}/dist/main.js"
+      ],
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "runtimeArgs": [
+        "--remote-debugging-port=9223",
+        "./dist"
+      ]
+    },
+    {
+      "name": "Electron: Renderer",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "sourceMaps": true,
+      "smartStep": true,
+      "webRoot": "${workspaceRoot}/dist",
+      "timeout": 30000
+    },
+    {
       "type": "chrome",
       "request": "attach",
       "name": "Attach",
@@ -10,7 +34,7 @@
       "smartStep": true,
       "webRoot": "${workspaceFolder}/dist",
       "sourceMapPathOverrides": {
-        "webpack:///./*": "${webRoot}/*"
+        "./src/*": "${workspaceFolder}/src/*"
       }
     },
     {
