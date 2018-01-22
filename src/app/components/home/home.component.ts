@@ -112,7 +112,7 @@ export class HomeComponent implements OnInit {
     }
     this.channels.split(",").map(x => {
       let channel = x.trim();
-      if (!channel.startsWith("#")) {
+      if (!channel.startsWith("#") && !channel.startsWith("@")) {
         channel = "#" + channel;
       }
       this.sendMessageToOneRecipent(channel);
