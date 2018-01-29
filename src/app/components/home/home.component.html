@@ -18,20 +18,20 @@
       <form>
         <div class='form-group row'>
           <button class='btn btn-secondary offset-2' (click)='onPickRandomMessageClicked()'>Pick a random message from</button>
-          <div class="dropdown col-5" dropdown>
+          <div class="dropdown col-8" dropdown>
             <button dropdownToggle class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              {{articleSourceProvider.curSource}}
+              aria-haspopup="true" aria-expanded="false" [title]="articleSourceProvider.curSource">
+              {{articleSourceProvider.displayableCurSource}}
             </button>
             <div *dropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <ng-container *ngFor="let src of articleSourceProvider.sources">
                 <a class="dropdown-item" href="#" (click)="onSourceSelected(src)">{{src}}</a>
               </ng-container>
             </div>
+            <button class="btn btn-secondary ml-1" (click)='addNewSource()'>
+              <i class='fa fa-plus'></i>Add Folder
+            </button>
           </div>
-          <button class="btn btn-secondary" (click)='addNewSource()'>
-            <i class='fa fa-plus mr-1'></i>Add Folder
-          </button>
         </div>
         <div class='form-group row'>
           <label class='col-2 col-form-label'>Message:

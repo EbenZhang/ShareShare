@@ -12,6 +12,15 @@ export class ArticleSourceProvider {
     this.store.set(this.curSourceKey, this._curSource);
   }
 
+  get displayableCurSource(): string {
+    const maxSourceLen = 120;
+    if (this._curSource && this._curSource.length > maxSourceLen) {
+      return this._curSource.substring(0, maxSourceLen) + "...";
+    } else {
+      return this._curSource;
+    }
+  }
+
   sources: string[] = [];
 
   constructor() {
