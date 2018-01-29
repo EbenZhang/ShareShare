@@ -171,7 +171,7 @@ export class HomeComponent implements OnInit {
     }
     const folder = this.articleSourceProvider.curSource;
     let file = this.getRandomFileFromFolderRecursively(folder);
-    while (file === null) {
+    while (file === null || fs.statSync(file).size <= 100) {
       file = this.getRandomFileFromFolderRecursively(folder);
     }
     let md: string;
